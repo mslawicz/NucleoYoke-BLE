@@ -60,6 +60,9 @@ inline void print_error(ble_error_t error, const char* msg)
         case BLE_ERROR_INTERNAL_STACK_FAILURE:
             printf("BLE_ERROR_INTERNAL_STACK_FAILURE: internal stack faillure");
             break;
+        case BLE_ERROR_NOT_FOUND:
+            printf("BLE_ERROR_NOT_FOUND");
+            break;   
     }
     printf("\r\n");
 }
