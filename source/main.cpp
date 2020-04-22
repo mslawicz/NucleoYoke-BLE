@@ -23,7 +23,7 @@
 
 static DigitalOut led1(LED1, 1);
 
-const static char DEVICE_NAME[] = "BATTERY";
+const static char DEVICE_NAME[] = "NucleoYoke";
 
 static events::EventQueue event_queue(/* event count */ 16 * EVENTS_EVENT_SIZE);
 
@@ -147,6 +147,7 @@ void schedule_ble_events(BLE::OnEventsToProcessCallbackContext *context) {
 
 int main()
 {
+    printf("Nucleo Yoke BLE v1\r\n");
     BLE &ble = BLE::Instance();
     ble.onEventsToProcess(schedule_ble_events);
 
