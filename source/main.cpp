@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include "Yoke.h"
 #include <mbed.h>
 #include "ble/BLE.h"
 
@@ -27,11 +28,13 @@ void blinkLed(void)
 
 int main()
 {
-    const uint32_t BlinkPeriod = 500;   // LED blink period [ms] 
     printf("Nucleo Yoke BLE v1\r\n");
 
     // yoke event queue
     events::EventQueue eventQueue;
+
+    // create Yoke object
+    Yoke yoke;
 
     // obtain a reference to BLE object that includes the basic attributes of a spec-compatible BLE device
     BLE& bleInterface = BLE::Instance();
