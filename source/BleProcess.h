@@ -17,10 +17,7 @@
 #ifndef BLE_PROCESS_H_
 #define BLE_PROCESS_H_
  
-#include "events/EventQueue.h"
-#include "platform/Callback.h"
-#include "platform/NonCopyable.h"
- 
+#include <mbed.h>
 #include "ble/BLE.h"
 #include "ble/Gap.h"
 #include "ble/GapAdvertisingParams.h"
@@ -41,10 +38,10 @@ public:
      *
      * Call start() to initiate ble processing.
      */
-    BleProcess(events::EventQueue &eventQueue, BLE &ble_interface) :
+    BleProcess(events::EventQueue& eventQueue, BLE& bleInterface) :
         eventQueue(eventQueue),
-        _ble_interface(ble_interface),
-        _post_init_cb()
+        bleInterface(bleInterface),
+        postInitCb()
     {
     }
  
@@ -61,7 +58,7 @@ public:
      */
     void on_init(mbed::Callback<void(BLE&, events::EventQueue&)> cb)
     {
-        _post_init_cb = cb;
+        postInitCb = cb;
     }
  
     /**
@@ -80,7 +77,7 @@ private:
     /**
      * Schedule processing of events from the BLE middleware in the event queue.
      */
-    void schedule_ble_events(BLE::OnEventsToProcessCallbackContext *event)
+    void schedule_ble_events(BLE::OnEventsToProcessCallbackContext* event)
     {
         eventQueue.call(mbed::callback(&event->ble, &BLE::processEvents));
     }
@@ -90,9 +87,9 @@ private:
      *
      * This function is invoked when the ble interface is initialized.
      */
-    void when_init_complete(BLE::InitializationCompleteCallbackContext *event);
+    void when_init_complete(BLE::InitializationCompleteCallbackContext* event);
  
-    void when_connection(const Gap::ConnectionCallbackParams_t *connection_event)
+    void when_connection(const Gap::ConnectionCallbackParams_t* connection_event)
     {
         printf("Connected.\r\n");
     }
@@ -103,7 +100,7 @@ private:
  
     bool set_advertising_parameters()
     {
-        Gap &gap = _ble_interface.gap();
+        Gap& gap = bleInterface.gap();
  
         ble_error_t error = gap.setAdvertisingParameters(
             ble::LEGACY_ADVERTISING_HANDLE,
@@ -121,8 +118,8 @@ private:
     bool set_advertising_data();
  
     events::EventQueue& eventQueue;
-    BLE &_ble_interface;
-    mbed::Callback<void(BLE&, events::EventQueue&)> _post_init_cb;
+    BLE& bleInterface;
+    mbed::Callback<void(BLE&, events::EventQueue&)> postInitCb;
 };
  
 #endif /* BLE_PROCESS_H_ */
