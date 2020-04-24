@@ -19,15 +19,28 @@
 
 static DigitalOut systemLED(LED1);
 
+// XXX blink function for test
+void blinkLed(void)
+{
+    systemLED = !systemLED;
+}
+
 int main()
 {
     const uint32_t BlinkPeriod = 500;   // LED blink period [ms] 
     printf("Nucleo Yoke BLE v1\r\n");
-    BLE& ble = BLE::Instance();
 
-    while(1)
-    {
-        systemLED = !systemLED;
-        ThisThread::sleep_for(BlinkPeriod);
-    }
+    // yoke event queue
+    events::EventQueue eventQueue;
+
+    // obtain a reference to BLE object that includes the basic attributes of a spec-compatible BLE device
+    BLE& bleInterface = BLE::Instance();
+
+    // XXX test of event
+    eventQueue.call_every(250, blinkLed);
+
+    // process the event queue
+    eventQueue.dispatch_forever();
+
+    return 0;
 }
