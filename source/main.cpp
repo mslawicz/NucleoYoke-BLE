@@ -18,14 +18,6 @@
 #include <mbed.h>
 #include "ble/BLE.h"
 
-static DigitalOut systemLED(LED1);
-
-// XXX blink function for test
-void blinkLed(void)
-{
-    systemLED = !systemLED;
-}
-
 int main()
 {
     printf("Nucleo Yoke BLE v1\r\n");
@@ -34,13 +26,10 @@ int main()
     events::EventQueue eventQueue;
 
     // create Yoke object
-    Yoke yoke;
+    Yoke yoke(eventQueue);
 
     // obtain a reference to BLE object that includes the basic attributes of a spec-compatible BLE device
     BLE& bleInterface = BLE::Instance();
-
-    // XXX test of event
-    eventQueue.call_every(250, blinkLed);
 
     // process the event queue
     eventQueue.dispatch_forever();
