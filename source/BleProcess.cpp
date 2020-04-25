@@ -1,17 +1,17 @@
 #include "BleProcess.h"
 
-    /**
-     * Construct a BleProcess from an event queue and a ble interface.
-     *
-     * Call start() to initiate ble processing.
-     */
-    BleProcess::BleProcess(events::EventQueue& eventQueue, BLE& bleInterface) :
-        eventQueue(eventQueue),
-        bleInterface(bleInterface),
-        postInitCb()
-    {
-        printf("BLE process created\r\n");
-    }
+/**
+* Construct a BleProcess from an event queue and a ble interface.
+*
+* Call start() to initiate ble processing.
+*/
+BleProcess::BleProcess(events::EventQueue& eventQueue, BLE& bleInterface) :
+    eventQueue(eventQueue),
+    bleInterface(bleInterface),
+    postInitCb()
+{
+    printf("BLE process created\r\n");
+}
 
 
 /**
@@ -117,16 +117,32 @@ bool BleProcess::startAdvertising(void)
 
     if (error)
     {
-        printf("Error %u during gap.startAdvertising.\r\n", error);
+        printf("Error %u during gap.startAdvertising\r\n", error);
         return false;
     }
     else
     {
-        printf("Advertising started.\r\n");
+        printf("Advertising started\r\n");
         return true;
     }
 }
 
+    bool BleProcess::setAdvertisingParameters()
+    {
+        Gap& gap = bleInterface.gap();
+ 
+        ble_error_t error = gap.setAdvertisingParameters(
+            ble::LEGACY_ADVERTISING_HANDLE,
+            ble::AdvertisingParameters()
+        );
+ 
+        if (error) {
+            printf("Gap::setAdvertisingParameters() failed with error %d", error);
+            return false;
+        }
+ 
+        return true;
+    }
 
 bool BleProcess::setAdvertisingData()
 {

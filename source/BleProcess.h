@@ -18,7 +18,6 @@
 #define BLE_PROCESS_H_
  
 #include <mbed.h>
-#include "platform/Callback.h"
 #include "ble/BLE.h"
 #include "ble/Gap.h"
 #include "ble/GapAdvertisingParams.h"
@@ -85,28 +84,10 @@ private:
      * This function is invoked when the ble interface is initialized.
      */
     void whenInitComplete(BLE::InitializationCompleteCallbackContext* event);
- 
-    bool startAdvertising(void);
- 
-    bool setAdvertisingParameters()
-    {
-        Gap& gap = bleInterface.gap();
- 
-        ble_error_t error = gap.setAdvertisingParameters(
-            ble::LEGACY_ADVERTISING_HANDLE,
-            ble::AdvertisingParameters()
-        );
- 
-        if (error) {
-            printf("Gap::setAdvertisingParameters() failed with error %d", error);
-            return false;
-        }
- 
-        return true;
-    }
- 
-    bool setAdvertisingData();
 
+    bool startAdvertising(void);
+    bool setAdvertisingParameters();
+    bool setAdvertisingData();
     void onConnectionComplete(const ble::ConnectionCompleteEvent &event) override;
     void onDisconnectionComplete(const ble::DisconnectionCompleteEvent &event) override;
  
