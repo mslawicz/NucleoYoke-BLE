@@ -13,9 +13,9 @@ bool BleProcess::start(void)
         return false;
     }
 
-    bleInterface.onEventsToProcess(makeFunctionPointer(this, &BleProcess::schedule_ble_events));
+    bleInterface.onEventsToProcess(makeFunctionPointer(this, &BleProcess::scheduleBleEvents));
 
-    ble_error_t error = bleInterface.init(this, &BleProcess::when_init_complete);
+    ble_error_t error = bleInterface.init(this, &BleProcess::whenInitComplete);
 
     if (error)
     {
@@ -45,7 +45,7 @@ void BleProcess::stop(void)
     *
     * This function is invoked when the ble interface is initialized.
     */
-void BleProcess::when_init_complete(BLE::InitializationCompleteCallbackContext* event)
+void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* event)
 {
     if (event->error)
     {
@@ -55,20 +55,18 @@ void BleProcess::when_init_complete(BLE::InitializationCompleteCallbackContext* 
     printf("Ble instance initialized\r\n");
 
     Gap& gap = bleInterface.gap();
-    gap.onConnection(this, &BleProcess::when_connection);
-    gap.onDisconnection(this, &BleProcess::when_disconnection);
 
-    if (!set_advertising_parameters())
+    if (!setAdvertisingParameters())
     {
         return;
     }
 
-    if (!set_advertising_data())
+    if (!setAdvertisingData())
     {
         return;
     }
 
-    if (!start_advertising())
+    if (!startAdvertising())
     {
         return;
     }
@@ -79,15 +77,24 @@ void BleProcess::when_init_complete(BLE::InitializationCompleteCallbackContext* 
     }
 }
 
-
-void BleProcess::when_disconnection(const Gap::DisconnectionCallbackParams_t* event)
+/*
+Called when connection attempt ends or an advertising device has been connected
+*/
+void BleProcess::onConnectionComplete(const ble::ConnectionCompleteEvent &event)
 {
-    printf("Disconnected.\r\n");
-    start_advertising();
+    printf("Connected\r\n");
 }
 
+/*
+Called when a connection has been disconnected
+*/
+void BleProcess::onDisconnectionComplete(const ble::DisconnectionCompleteEvent &event)
+{
+    printf("Disconnected\r\n");
+    startAdvertising();
+}
 
-bool BleProcess::start_advertising(void)
+bool BleProcess::startAdvertising(void)
 {
     Gap& gap = bleInterface.gap();
 
@@ -107,7 +114,7 @@ bool BleProcess::start_advertising(void)
 }
 
 
-bool BleProcess::set_advertising_data()
+bool BleProcess::setAdvertisingData()
 {
     Gap& gap = bleInterface.gap();
 

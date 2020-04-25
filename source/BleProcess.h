@@ -77,7 +77,7 @@ private:
     /**
      * Schedule processing of events from the BLE middleware in the event queue.
      */
-    void schedule_ble_events(BLE::OnEventsToProcessCallbackContext* event)
+    void scheduleBleEvents(BLE::OnEventsToProcessCallbackContext* event)
     {
         eventQueue.call(mbed::callback(&event->ble, &BLE::processEvents));
     }
@@ -87,11 +87,11 @@ private:
      *
      * This function is invoked when the ble interface is initialized.
      */
-    void when_init_complete(BLE::InitializationCompleteCallbackContext* event);
+    void whenInitComplete(BLE::InitializationCompleteCallbackContext* event);
  
-    bool start_advertising(void);
+    bool startAdvertising(void);
  
-    bool set_advertising_parameters()
+    bool setAdvertisingParameters()
     {
         Gap& gap = bleInterface.gap();
  
@@ -108,7 +108,7 @@ private:
         return true;
     }
  
-    bool set_advertising_data();
+    bool setAdvertisingData();
 
     void onConnectionComplete(const ble::ConnectionCompleteEvent &event) override;
     void onDisconnectionComplete(const ble::DisconnectionCompleteEvent &event) override;
