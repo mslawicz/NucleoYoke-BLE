@@ -14,7 +14,7 @@ this function should be called as a callback on BLE initialization end
 */
 void Yoke::start(void)
 {
-    printf("Yoke start\r\n");
+    printf("Yoke started\r\n");
     // XXX test of event
     eventQueue.call_every(250, callback(this, &Yoke::toggleLed));
 }

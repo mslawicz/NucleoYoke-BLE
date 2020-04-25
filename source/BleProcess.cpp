@@ -69,6 +69,7 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
     printf("BLE instance initialized\r\n");
 
     Gap& gap = bleInterface.gap();
+    gap.setEventHandler(this);
 
     if (!setAdvertisingParameters())
     {
