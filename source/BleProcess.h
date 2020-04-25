@@ -30,7 +30,7 @@
  * Setup advertising payload and manage advertising state.
  * Delegate to GattClientProcess once the connection is established.
  */
-class BleProcess : private mbed::NonCopyable<BleProcess>
+class BleProcess : private mbed::NonCopyable<BleProcess>, public ble::Gap::EventHandler
 {
 public:
     /**
@@ -56,7 +56,7 @@ public:
      * @param[in] cb The callback object that will be called when the ble
      * interface is initialized.
      */
-    void on_init(mbed::Callback<void(BLE&, events::EventQueue&)> cb)
+    void onInit(mbed::Callback<void(BLE&, events::EventQueue&)> cb)
     {
         postInitCb = cb;
     }
@@ -89,13 +89,6 @@ private:
      */
     void when_init_complete(BLE::InitializationCompleteCallbackContext* event);
  
-    void when_connection(const Gap::ConnectionCallbackParams_t* connection_event)
-    {
-        printf("Connected.\r\n");
-    }
- 
-    void when_disconnection(const Gap::DisconnectionCallbackParams_t *event);
- 
     bool start_advertising(void);
  
     bool set_advertising_parameters()
@@ -116,6 +109,9 @@ private:
     }
  
     bool set_advertising_data();
+
+    void onConnectionComplete(const ble::ConnectionCompleteEvent &event) override;
+    void onDisconnectionComplete(const ble::DisconnectionCompleteEvent &event) override;
  
     events::EventQueue& eventQueue;
     BLE& bleInterface;
