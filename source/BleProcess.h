@@ -18,6 +18,7 @@
 #define BLE_PROCESS_H_
  
 #include <mbed.h>
+#include "platform/Callback.h"
 #include "ble/BLE.h"
 #include "ble/Gap.h"
 #include "ble/GapAdvertisingParams.h"
@@ -38,12 +39,7 @@ public:
      *
      * Call start() to initiate ble processing.
      */
-    BleProcess(events::EventQueue& eventQueue, BLE& bleInterface) :
-        eventQueue(eventQueue),
-        bleInterface(bleInterface),
-        postInitCb()
-    {
-    }
+    BleProcess(events::EventQueue& eventQueue, BLE& bleInterface);
  
     ~BleProcess()
     {
@@ -56,7 +52,8 @@ public:
      * @param[in] cb The callback object that will be called when the ble
      * interface is initialized.
      */
-    void onInit(mbed::Callback<void(BLE&, events::EventQueue&)> cb)
+    //void onInit(mbed::Callback<void(BLE&, events::EventQueue&)> cb)
+    void onInit(mbed::Callback<void(void)> cb)
     {
         postInitCb = cb;
     }
@@ -115,7 +112,7 @@ private:
  
     events::EventQueue& eventQueue;
     BLE& bleInterface;
-    mbed::Callback<void(BLE&, events::EventQueue&)> postInitCb;
+    mbed::Callback<void(void)> postInitCb;
 };
  
 #endif /* BLE_PROCESS_H_ */

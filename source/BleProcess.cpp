@@ -1,11 +1,25 @@
 #include "BleProcess.h"
 
+    /**
+     * Construct a BleProcess from an event queue and a ble interface.
+     *
+     * Call start() to initiate ble processing.
+     */
+    BleProcess::BleProcess(events::EventQueue& eventQueue, BLE& bleInterface) :
+        eventQueue(eventQueue),
+        bleInterface(bleInterface),
+        postInitCb()
+    {
+        printf("BLE process created\r\n");
+    }
+
+
 /**
 * Initialize the ble interface, configure it and start advertising.
 */
 bool BleProcess::start(void)
 {
-    printf("Ble process started.\r\n");
+    printf("BLE process started\r\n");
 
     if (bleInterface.hasInitialized())
     {
@@ -35,7 +49,7 @@ void BleProcess::stop(void)
     if (bleInterface.hasInitialized())
     {
         bleInterface.shutdown();
-        printf("Ble process stopped.");
+        printf("BLE process stopped");
     }
 }
 
@@ -52,7 +66,7 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
         printf("Error %u during the initialization\r\n", event->error);
         return;
     }
-    printf("Ble instance initialized\r\n");
+    printf("BLE instance initialized\r\n");
 
     Gap& gap = bleInterface.gap();
 
@@ -73,7 +87,7 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
 
     if (postInitCb)
     {
-        postInitCb(bleInterface, eventQueue);
+        postInitCb();
     }
 }
 
@@ -124,7 +138,7 @@ bool BleProcess::setAdvertisingData()
         ble::LEGACY_ADVERTISING_HANDLE,
         ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE>()
             .setFlags()
-            .setName("GattServer")
+            .setName("NucleoYoke")
             .getAdvertisingData()
     );
 

@@ -15,6 +15,7 @@
  */
 
 #include "Yoke.h"
+#include "BleProcess.h"
 #include <mbed.h>
 #include "ble/BLE.h"
 
@@ -25,11 +26,20 @@ int main()
     // yoke event queue
     events::EventQueue eventQueue;
 
-    // create Yoke object
-    Yoke yoke(eventQueue);
-
     // obtain a reference to BLE object that includes the basic attributes of a spec-compatible BLE device
     BLE& bleInterface = BLE::Instance();
+
+    // create Yoke object
+    Yoke yoke(eventQueue, bleInterface);
+
+    // Construct a BleProcess from an event queue and a ble interface
+    BleProcess bleProcess(eventQueue, bleInterface);
+
+    // Subscription to the ble interface initialization event
+    bleProcess.onInit(callback(&yoke, &Yoke::start));
+
+    // bind the event queue to the ble interface, initialize the interface and start advertising
+    bleProcess.start();
 
     // process the event queue
     eventQueue.dispatch_forever();
