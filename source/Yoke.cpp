@@ -4,7 +4,7 @@ Yoke::Yoke(events::EventQueue& eventQueue, BLE& bleInterface) :
     eventQueue(eventQueue),
     bleInterface(bleInterface),
     led(LED1),
-    joystickHID(eventQueue, bleInterface)
+    joystickHID(eventQueue, bleInterface, joystickReportMap, sizeof(joystickReportMap))
 {
     printf("Yoke object created\r\n");
 
@@ -22,19 +22,6 @@ void Yoke::start(void)
     // XXX test of event
     eventQueue.call_every(250, callback(this, &Yoke::toggleLed));
 
-    // // get the pointer to BLE Gatt server
-    // pGattServer = &bleInterface.gattServer();
-
-    // // register the HID service
-    // ble_error_t error = pGattServer->addService(hidService);
-
-    // if (error)
-    // {
-    //     printf("Error %u during HID service registration\r\n", error);
-    //     return;
-    // }
-    // else
-    // {
-    //     printf("HID service registered\r\n");
-    // }
+    // setup joystick HID service
+    joystickHID.setup();
 }
