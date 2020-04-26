@@ -21,7 +21,7 @@ void Yoke::start(void)
     printf("Yoke started\r\n");
 
     // setup joystick HID service
-    joystickHID.setup();
+    joystickHID.init();
 
     // XXX eventually this handler should be called on IMU interrupts
     eventQueue.call_every(250, callback(this, &Yoke::handler));

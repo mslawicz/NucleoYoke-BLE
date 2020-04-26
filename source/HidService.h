@@ -55,7 +55,7 @@ class HidService
 {
 public:
     HidService(events::EventQueue& eventQueue, BLE& bleInterface, ReportMap reportMap, uint16_t reportMapLength, uint8_t* inputReport, uint8_t inputReportLength);
-    void setup(void);
+    void init(void);
     ble_error_t sendReport(void);       // sends input report to PC
 private:
     GattAttribute** inputReportDescriptors();   // Creates the Gatt descriptor for a report characteristic

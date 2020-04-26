@@ -24,11 +24,11 @@ HidService::HidService(events::EventQueue& eventQueue, BLE& bleInterface, Report
 }
 
 /*
-setup HID Service
+initialize HID Service
 */
-void HidService::setup(void)
+void HidService::init(void)
 {
-    printf("HID service setup\r\n");
+    printf("HID service initializing\r\n");
 
     static GattCharacteristic* characteristics[] =
     {
