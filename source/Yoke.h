@@ -11,9 +11,11 @@ public:
     void start(void);
 private:
     void toggleLed(void) { led = !led; }
-    events::EventQueue& eventQueue;
-    BLE& bleInterface;
-    DigitalOut led;
+    events::EventQueue& eventQueue;     // event queue of the main thread
+    BLE& bleInterface;                  // interface to BLE device
+    DigitalOut led;                     // green LED
+    //GattServer* pGattServer{nullptr};   // pointer to BLE Gatt server
+    //GattService* pHidService{nullptr};  // pointer to HID service of the Gatt server
 };
 
 #endif /* YOKE_H_ */
