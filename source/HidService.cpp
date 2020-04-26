@@ -1,8 +1,9 @@
 #include "HidService.h"
 
-HidService::HidService(events::EventQueue& eventQueue, BLE& bleInterface, ReportMap reportMap, uint16_t reportMapLength) :
+HidService::HidService(events::EventQueue& eventQueue, BLE& bleInterface, ReportMap reportMap, uint16_t reportMapLength, uint8_t* inputReport, uint8_t inputReportLength) :
     eventQueue(eventQueue),
     bleInterface(bleInterface),
+    inputReportReferenceDescriptor(BLE_UUID_DESCRIPTOR_REPORT_REFERENCE, (uint8_t*)&inputReportReferenceData, 2, 2),
     hidInformationCharacteristic(GattCharacteristic::UUID_HID_INFORMATION_CHAR, &hidInformation),
     reportMapCharacteristic(GattCharacteristic::UUID_REPORT_MAP_CHAR,
             const_cast<uint8_t*>(reportMap), reportMapLength, reportMapLength,
@@ -11,7 +12,11 @@ HidService::HidService(events::EventQueue& eventQueue, BLE& bleInterface, Report
             GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_READ | GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_WRITE_WITHOUT_RESPONSE),
     hidControlPointCharacteristic(GattCharacteristic::UUID_HID_CONTROL_POINT_CHAR,
             &controlPointCommand, 1, 1,
-            GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_WRITE_WITHOUT_RESPONSE)
+            GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_WRITE_WITHOUT_RESPONSE),
+    inputReportCharacteristic(GattCharacteristic::UUID_REPORT_CHAR,
+            inputReport, inputReportLength, inputReportLength,
+            GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_READ | GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_NOTIFY | GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_WRITE,
+            inputReportDescriptors(), 1)
 {
 
 }
@@ -29,32 +34,10 @@ void HidService::setup(void)
         &reportMapCharacteristic,
         &protocolModeCharacteristic,
         &hidControlPointCharacteristic,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL
+        &inputReportCharacteristic
     };
 
-    unsigned int charIndex = 4;
-    /*
-     * Report characteristics are optional, and depend on the reportMap descriptor
-     * Note: at least one should be present, but we don't check that at the moment.
-     */
-    // if (inputReportLength)
-    //     characteristics[charIndex++] = &inputReportCharacteristic;
-    // if (outputReportLength)
-    //     characteristics[charIndex++] = &outputReportCharacteristic;
-    // if (featureReportLength)
-    //     characteristics[charIndex++] = &featureReportCharacteristic;
-
-    /* TODO: let children add some more characteristics, namely boot keyboard and mouse (They are
-     * mandatory as per HIDS spec.) Ex:
-     *
-     * addExtraCharacteristics(characteristics, int& charIndex);
-     */
-
-    GattService service(GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE, characteristics, charIndex);
+    GattService service(GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE, characteristics, sizeof(characteristics) / sizeof(characteristics[0]));
 
     ble_error_t error = bleInterface.gattServer().addService(service);
 
@@ -67,4 +50,14 @@ void HidService::setup(void)
     {
         printf("HID service registered\r\n");
     }
+}
+
+
+GattAttribute** HidService::inputReportDescriptors()
+{
+    inputReportReferenceData.ID = 0;
+    inputReportReferenceData.type = ReportType::INPUT_REPORT;
+
+    static GattAttribute* descs[] = { &inputReportReferenceDescriptor };
+    return descs;
 }

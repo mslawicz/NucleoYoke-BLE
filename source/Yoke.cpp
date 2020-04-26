@@ -4,7 +4,7 @@ Yoke::Yoke(events::EventQueue& eventQueue, BLE& bleInterface) :
     eventQueue(eventQueue),
     bleInterface(bleInterface),
     led(LED1),
-    joystickHID(eventQueue, bleInterface, joystickReportMap, sizeof(joystickReportMap))
+    joystickHID(eventQueue, bleInterface, joystickReportMap, sizeof(joystickReportMap), joystickInputReport, sizeof(joystickInputReport))
 {
     printf("Yoke object created\r\n");
 

@@ -21,8 +21,15 @@
 #include "ble/BLE.h"
 
 #define HID_VERSION_1_11    0x0111
+#define BLE_UUID_DESCRIPTOR_REPORT_REFERENCE 0x2908
 
 using ReportMap = const uint8_t[];
+
+struct ReportReference
+{
+    uint8_t ID;
+    uint8_t type;
+};
 
 struct HidInformation
 {
@@ -37,18 +44,29 @@ enum ProtocolMode
     REPORT_PROTOCOL = 0x1
 };
 
+enum ReportType
+{
+    INPUT_REPORT    = 0x1,
+    OUTPUT_REPORT   = 0x2,
+    FEATURE_REPORT  = 0x3,
+};
+
 class HidService
 {
 public:
-    HidService(events::EventQueue& eventQueue, BLE& bleInterface, ReportMap reportMap, uint16_t reportMapLength);
+    HidService(events::EventQueue& eventQueue, BLE& bleInterface, ReportMap reportMap, uint16_t reportMapLength, uint8_t* inputReport, uint8_t inputReportLength);
     void setup(void);
 private:
+    GattAttribute** inputReportDescriptors();   // Creates the Gatt descriptor for a report characteristic
     events::EventQueue& eventQueue;     // event queue of the main thread
     BLE& bleInterface;                  // interface to BLE device
     uint8_t protocolMode{REPORT_PROTOCOL};            // protocol mode boot or report
     uint8_t controlPointCommand;
+    ReportReference inputReportReferenceData;
 
     HidInformation hidInformation{HID_VERSION_1_11, 0x00, 0x03};
+
+    GattAttribute inputReportReferenceDescriptor;
 
     // Required gatt characteristics: Report Map, Information, Control Point
     GattCharacteristic reportMapCharacteristic;
@@ -57,6 +75,9 @@ private:
 
     // Optional gatt characteristics:
     GattCharacteristic protocolModeCharacteristic;
+
+    // Report characteristics
+    GattCharacteristic inputReportCharacteristic;
 };
 
 

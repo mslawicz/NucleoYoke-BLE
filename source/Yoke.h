@@ -48,8 +48,7 @@ private:
     BLE& bleInterface;                  // interface to BLE device
     DigitalOut led;                     // green LED
     HidService joystickHID;             // joystick HID Service object
-    //GattServer* pGattServer{nullptr};   // pointer to BLE Gatt server
-    //GattService* pHidService{nullptr};  // pointer to HID service of the Gatt server
+    uint8_t joystickInputReport[5];     // joystick input report to be sent to PC
 };
 
 #endif /* YOKE_H_ */
