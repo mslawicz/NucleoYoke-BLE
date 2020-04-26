@@ -155,7 +155,7 @@ bool BleProcess::setAdvertisingData()
         ble::LEGACY_ADVERTISING_HANDLE,
         ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE>()
             .setFlags()
-            .setName("NucleoYoke")
+            .setName("Nucleo Yoke")
             .getAdvertisingData()
     );
 

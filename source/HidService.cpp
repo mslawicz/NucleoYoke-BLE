@@ -3,6 +3,8 @@
 HidService::HidService(events::EventQueue& eventQueue, BLE& bleInterface, ReportMap reportMap, uint16_t reportMapLength, uint8_t* inputReport, uint8_t inputReportLength) :
     eventQueue(eventQueue),
     bleInterface(bleInterface),
+    inputReport(inputReport),
+    inputReportLength(inputReportLength),
     inputReportReferenceDescriptor(BLE_UUID_DESCRIPTOR_REPORT_REFERENCE, (uint8_t*)&inputReportReferenceData, 2, 2),
     hidInformationCharacteristic(GattCharacteristic::UUID_HID_INFORMATION_CHAR, &hidInformation),
     reportMapCharacteristic(GattCharacteristic::UUID_REPORT_MAP_CHAR,
@@ -60,4 +62,12 @@ GattAttribute** HidService::inputReportDescriptors()
 
     static GattAttribute* descs[] = { &inputReportReferenceDescriptor };
     return descs;
+}
+
+/*
+* sends input report to PC
+*/
+ble_error_t HidService::sendReport(void)
+{
+    return bleInterface.gattServer().write(inputReportCharacteristic.getValueHandle(), inputReport, inputReportLength);
 }

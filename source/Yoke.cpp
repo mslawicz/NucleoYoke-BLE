@@ -24,4 +24,7 @@ void Yoke::start(void)
 
     // setup joystick HID service
     joystickHID.setup();
+
+    // XXX test of event
+    eventQueue.call_every(250, callback(&joystickHID, &HidService::sendReport));
 }
