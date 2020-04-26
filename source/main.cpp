@@ -37,6 +37,7 @@ int main()
 
     // Subscription to the ble interface initialization event
     bleProcess.onInit(callback(&yoke, &Yoke::start));
+    bleProcess.onConnectionChange(callback(&yoke, &Yoke::setConnectionFlag));
 
     // bind the event queue to the ble interface, initialize the interface and start advertising
     bleProcess.start();

@@ -42,13 +42,15 @@ class Yoke
 public:
     Yoke(events::EventQueue& eventQueue, BLE& bleInterface);
     void start(void);
+    void setConnectionFlag(bool connected) { bleIsConnected = connected; }
 private:
-    void toggleLed(void) { led = !led; }
+    void handler(void);
     events::EventQueue& eventQueue;     // event queue of the main thread
     BLE& bleInterface;                  // interface to BLE device
     DigitalOut led;                     // green LED
     HidService joystickHID;             // joystick HID Service object
     uint8_t joystickInputReport[5];     // joystick input report to be sent to PC
+    bool bleIsConnected{false};         // flag of active BLE connection
 };
 
 #endif /* YOKE_H_ */

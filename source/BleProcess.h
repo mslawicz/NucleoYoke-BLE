@@ -51,12 +51,19 @@ public:
      * @param[in] cb The callback object that will be called when the ble
      * interface is initialized.
      */
-    //void onInit(mbed::Callback<void(BLE&, events::EventQueue&)> cb)
     void onInit(mbed::Callback<void(void)> cb)
     {
         postInitCb = cb;
     }
  
+   /**
+     * Subscription to the ble connection state change event.
+     */
+    void onConnectionChange(mbed::Callback<void(bool)> cb)
+    {
+        onConnectionChangeCb = cb;
+    }
+
     /**
      * Initialize the ble interface, configure it and start advertising.
      */
@@ -94,6 +101,7 @@ private:
     events::EventQueue& eventQueue;
     BLE& bleInterface;
     mbed::Callback<void(void)> postInitCb;
+    mbed::Callback<void(bool)> onConnectionChangeCb;
 };
  
 #endif /* BLE_PROCESS_H_ */

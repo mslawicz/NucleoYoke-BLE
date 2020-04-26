@@ -8,7 +8,8 @@
 BleProcess::BleProcess(events::EventQueue& eventQueue, BLE& bleInterface) :
     eventQueue(eventQueue),
     bleInterface(bleInterface),
-    postInitCb()
+    postInitCb(),
+    onConnectionChangeCb()
 {
     printf("BLE process created\r\n");
 }
@@ -98,6 +99,10 @@ Called when connection attempt ends or an advertising device has been connected
 void BleProcess::onConnectionComplete(const ble::ConnectionCompleteEvent &event)
 {
     printf("Connected\r\n");
+    if(onConnectionChangeCb)
+    {
+        onConnectionChangeCb(true);
+    }
 }
 
 /*
@@ -106,6 +111,10 @@ Called when a connection has been disconnected
 void BleProcess::onDisconnectionComplete(const ble::DisconnectionCompleteEvent &event)
 {
     printf("Disconnected\r\n");
+    if(onConnectionChangeCb)
+    {
+        onConnectionChangeCb(false);
+    }
     startAdvertising();
 }
 
