@@ -3,7 +3,8 @@
 Yoke::Yoke(events::EventQueue& eventQueue, BLE& bleInterface) :
     eventQueue(eventQueue),
     bleInterface(bleInterface),
-    led(LED1)
+    led(LED1),
+    joystickHID(eventQueue, bleInterface)
 {
     printf("Yoke object created\r\n");
 
