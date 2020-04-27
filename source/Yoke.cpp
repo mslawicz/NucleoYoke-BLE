@@ -30,6 +30,12 @@ void Yoke::start(void)
             .getAdvertisingData()
     );
 
+    if (error)
+    {
+        printf("Gap::setAdvertisingPayload() failed with error %d", error);
+        return;
+    }
+
     // XXX eventually this handler should be called on IMU interrupts
     eventQueue.call_every(250, callback(this, &Yoke::handler));
 }
