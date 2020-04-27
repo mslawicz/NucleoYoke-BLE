@@ -5,7 +5,6 @@
 #include <mbed.h>
 #include "ble/BLE.h"
 #include "USBHID_Types.h"
-#include <string>
 
 ReportMap joystickReportMap =
 {
