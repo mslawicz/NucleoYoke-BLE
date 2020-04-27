@@ -19,8 +19,8 @@
  
 #include <mbed.h>
 #include "ble/BLE.h"
+#include "USBHID_Types.h"
 
-#define HID_VERSION_1_11    0x0111
 #define BLE_UUID_DESCRIPTOR_REPORT_REFERENCE 0x2908
 
 using ReportMap = const uint8_t[];
