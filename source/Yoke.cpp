@@ -15,7 +15,7 @@ this function should be called as a callback on BLE initialization end
 */
 void Yoke::start(void)
 {
-    printf("Yoke started\r\n");
+    printf("Yoke in mouse mode started\r\n");
 
     // setup joystick HID service
     joystickHID.init();
@@ -25,8 +25,8 @@ void Yoke::start(void)
     (
         ble::LEGACY_ADVERTISING_HANDLE,
         ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE>()
-            .setName("Nucleo Yoke")
-            .setAppearance(ble::adv_data_appearance_t::JOYSTICK)
+            .setName("Nucleo Mouse")
+            .setAppearance(ble::adv_data_appearance_t::MOUSE)
             .getAdvertisingData()
     );
 
