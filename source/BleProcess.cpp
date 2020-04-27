@@ -82,15 +82,12 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
         return;
     }
 
-    if (!startAdvertising())
-    {
-        return;
-    }
-
     if (postInitCb)
     {
         postInitCb();
     }
+
+    startAdvertising();
 }
 
 /*
@@ -146,7 +143,8 @@ bool BleProcess::startAdvertising(void)
             ble::AdvertisingParameters()
         );
  
-        if (error) {
+        if (error)
+        {
             printf("Gap::setAdvertisingParameters() failed with error %d", error);
             return false;
         }
@@ -160,11 +158,11 @@ bool BleProcess::setAdvertisingData()
 
     /* Use the simple builder to construct the payload; it fails at runtime
         * if there is not enough space left in the buffer */
-    ble_error_t error = gap.setAdvertisingPayload(
+    ble_error_t error = gap.setAdvertisingPayload
+    (
         ble::LEGACY_ADVERTISING_HANDLE,
         ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE>()
             .setFlags()
-            .setName("Nucleo Yoke")
             .getAdvertisingData()
     );
 

@@ -7,9 +7,6 @@ Yoke::Yoke(events::EventQueue& eventQueue, BLE& bleInterface) :
     joystickHID(eventQueue, bleInterface, joystickReportMap, sizeof(joystickReportMap), joystickInputReport, sizeof(joystickInputReport))
 {
     printf("Yoke object created\r\n");
-
-    //hidService(GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE, hidCharacteristics, sizeof(hidCharacteristics) / sizeof(hidCharacteristics[0]))
-    //GattCharacteristic** hidCharacteristics;  // list of the characteristics of the HID service
 }
 
 /*
@@ -22,6 +19,16 @@ void Yoke::start(void)
 
     // setup joystick HID service
     joystickHID.init();
+
+    Gap& gap = bleInterface.gap();
+    ble_error_t error = gap.setAdvertisingPayload
+    (
+        ble::LEGACY_ADVERTISING_HANDLE,
+        ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE>()
+            .setName("Nucleo Yoke")
+            .setAppearance(ble::adv_data_appearance_t::JOYSTICK)
+            .getAdvertisingData()
+    );
 
     // XXX eventually this handler should be called on IMU interrupts
     eventQueue.call_every(250, callback(this, &Yoke::handler));
