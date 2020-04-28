@@ -53,6 +53,7 @@ private:
     HidService joystickHID;             // joystick HID Service object
     DeviceInformationService deviceInformationService;  // BLE Device Information Service Object
     BatteryService batteryService;      // BLE Battery Service object
+    UUID serviceUuid;                   // UUID of the main service
     uint8_t joystickInputReport[5];     // joystick input report to be sent to PC
     bool bleIsConnected{false};         // flag of active BLE connection
 };

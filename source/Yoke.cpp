@@ -6,7 +6,8 @@ Yoke::Yoke(events::EventQueue& eventQueue, BLE& bleInterface) :
     led(LED1),
     joystickHID(eventQueue, bleInterface, joystickReportMap, sizeof(joystickReportMap), joystickInputReport, sizeof(joystickInputReport)),
     deviceInformationService(bleInterface, "Marcin", "NYBLE", "00001", "1.0", "1.0", "1.0"),
-    batteryService(bleInterface)
+    batteryService(bleInterface),
+    serviceUuid(GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE)
 {
     printf("Yoke object created\r\n");
 }
@@ -22,8 +23,6 @@ void Yoke::start(void)
     // setup joystick HID service
     joystickHID.init();
 
-    UUID service = GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE;
-
     Gap& gap = bleInterface.gap();
     ble_error_t error = gap.setAdvertisingPayload
     (
@@ -31,7 +30,7 @@ void Yoke::start(void)
         ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE>()
             .setName("Nucleo Yoke")
             .setAppearance(ble::adv_data_appearance_t::JOYSTICK)
-            .setLocalServiceList(mbed::make_Span(&service, 1))
+            .setLocalServiceList(mbed::make_Span(&serviceUuid, 1))
             .setAdvertisingInterval((ble::adv_interval_t)80)    // 80 * 0.625 = 50 ms
             .getAdvertisingData()
     );
@@ -57,5 +56,6 @@ void Yoke::handler(void)
     if(bleIsConnected)
     {
         joystickHID.sendReport();
+        batteryService.updateBatteryLevel(rand() % 100);
     }
 }
