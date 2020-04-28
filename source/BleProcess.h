@@ -93,8 +93,6 @@ private:
     void whenInitComplete(BLE::InitializationCompleteCallbackContext* event);
 
     bool startAdvertising(void);
-    bool setAdvertisingParameters();
-    bool setAdvertisingData();
     void onConnectionComplete(const ble::ConnectionCompleteEvent &event) override;
     void onDisconnectionComplete(const ble::DisconnectionCompleteEvent &event) override;
  

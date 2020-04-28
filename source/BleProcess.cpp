@@ -67,27 +67,18 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
         printf("Error %u during the initialization\r\n", event->error);
         return;
     }
-    printf("BLE instance initialized\r\n");
-
-    Gap& gap = bleInterface.gap();
-    gap.setEventHandler(this);
-
-    if (!setAdvertisingParameters())
+    else
     {
-        return;
-    }
+        printf("BLE instance initialized\r\n");
+        Gap& gap = bleInterface.gap();
+        gap.setEventHandler(this);
 
-    if (!setAdvertisingData())
-    {
-        return;
+        if (postInitCb)
+        {
+            postInitCb();
+            startAdvertising();
+        }
     }
-
-    if (postInitCb)
-    {
-        postInitCb();
-    }
-
-    startAdvertising();
 }
 
 /*
@@ -132,45 +123,4 @@ bool BleProcess::startAdvertising(void)
         printf("Advertising started\r\n");
         return true;
     }
-}
-
-    bool BleProcess::setAdvertisingParameters()
-    {
-        Gap& gap = bleInterface.gap();
- 
-        ble_error_t error = gap.setAdvertisingParameters(
-            ble::LEGACY_ADVERTISING_HANDLE,
-            ble::AdvertisingParameters()
-        );
- 
-        if (error)
-        {
-            printf("Gap::setAdvertisingParameters() failed with error %d", error);
-            return false;
-        }
- 
-        return true;
-    }
-
-bool BleProcess::setAdvertisingData()
-{
-    Gap& gap = bleInterface.gap();
-
-    /* Use the simple builder to construct the payload; it fails at runtime
-        * if there is not enough space left in the buffer */
-    ble_error_t error = gap.setAdvertisingPayload
-    (
-        ble::LEGACY_ADVERTISING_HANDLE,
-        ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE>()
-            .setFlags()
-            .getAdvertisingData()
-    );
-
-    if (error)
-    {
-        printf("Gap::setAdvertisingPayload() failed with error %d", error);
-        return false;
-    }
-
-    return true;
 }

@@ -24,16 +24,24 @@ void Yoke::start(void)
     joystickHID.init();
 
     Gap& gap = bleInterface.gap();
-    ble_error_t error = gap.setAdvertisingPayload
-    (
-        ble::LEGACY_ADVERTISING_HANDLE,
-        ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE>()
-            .setName("Nucleo Yoke")
-            .setAppearance(ble::adv_data_appearance_t::JOYSTICK)
-            .setLocalServiceList(mbed::make_Span(&serviceUuid, 1))
-            .setAdvertisingInterval((ble::adv_interval_t)80)    // 80 * 0.625 = 50 ms
-            .getAdvertisingData()
-    );
+
+    ble_error_t error = gap.setAdvertisingParameters(ble::LEGACY_ADVERTISING_HANDLE, ble::AdvertisingParameters());
+
+    if (error)
+    {
+        printf("Gap::setAdvertisingParameters() failed with error %d", error);
+        return;
+    }
+
+    uint8_t advertisingBuffer[ble::LEGACY_ADVERTISING_MAX_SIZE];
+    ble::AdvertisingDataBuilder advertisingDataBuilder(advertisingBuffer);
+    advertisingDataBuilder.setFlags();
+    advertisingDataBuilder.setName("Nucleo Yoke");
+    advertisingDataBuilder.setAppearance(ble::adv_data_appearance_t::JOYSTICK);
+    advertisingDataBuilder.setLocalServiceList(mbed::make_Span(&serviceUuid, 1));
+    advertisingDataBuilder.setAdvertisingInterval((ble::adv_interval_t)80);    // 80 * 0.625 = 50 ms
+
+    error = gap.setAdvertisingPayload(ble::LEGACY_ADVERTISING_HANDLE, advertisingDataBuilder.getAdvertisingData());
 
     if (error)
     {
