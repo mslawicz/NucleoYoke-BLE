@@ -22,6 +22,8 @@ void Yoke::start(void)
     // setup joystick HID service
     joystickHID.init();
 
+    UUID service = GattService::UUID_HUMAN_INTERFACE_DEVICE_SERVICE;
+
     Gap& gap = bleInterface.gap();
     ble_error_t error = gap.setAdvertisingPayload
     (
@@ -29,6 +31,8 @@ void Yoke::start(void)
         ble::AdvertisingDataSimpleBuilder<ble::LEGACY_ADVERTISING_MAX_SIZE>()
             .setName("Nucleo Yoke")
             .setAppearance(ble::adv_data_appearance_t::JOYSTICK)
+            .setLocalServiceList(mbed::make_Span(&service, 1))
+            .setAdvertisingInterval((ble::adv_interval_t)80)    // 80 * 0.625 = 50 ms
             .getAdvertisingData()
     );
 
