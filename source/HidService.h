@@ -40,15 +40,15 @@ struct HidInformation
 
 enum ProtocolMode
 {
-    BOOT_PROTOCOL   = 0x0,
-    REPORT_PROTOCOL = 0x1
+    BOOT_PROTOCOL   = 0,
+    REPORT_PROTOCOL = 1
 };
 
 enum ReportType
 {
-    INPUT_REPORT    = 0x1,
-    OUTPUT_REPORT   = 0x2,
-    FEATURE_REPORT  = 0x3,
+    INPUT_REPORT    = 1,
+    OUTPUT_REPORT   = 2,
+    FEATURE_REPORT  = 3,
 };
 
 class HidService
@@ -70,7 +70,7 @@ private:
     ReportReference inputReportReferenceData;
     ReportReference featureReportReferenceData;
 
-    HidInformation hidInformation{HID_VERSION_1_11, 0x00, 0x03};
+    HidInformation hidInformation{HID_VERSION_1_11, 0, 3};
 
     GattAttribute inputReportReferenceDescriptor;
     GattAttribute featureReportReferenceDescriptor;

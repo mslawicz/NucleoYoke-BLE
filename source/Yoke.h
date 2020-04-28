@@ -4,6 +4,8 @@
 #include "HidService.h"
 #include <mbed.h>
 #include "ble/BLE.h"
+#include "ble/services/DeviceInformationService.h"
+#include "ble/services/BatteryService.h"
 #include "USBHID_Types.h"
 
 ReportMap joystickReportMap =
@@ -49,6 +51,8 @@ private:
     BLE& bleInterface;                  // interface to BLE device
     DigitalOut led;                     // green LED
     HidService joystickHID;             // joystick HID Service object
+    DeviceInformationService deviceInformationService;  // BLE Device Information Service Object
+    BatteryService batteryService;      // BLE Battery Service object
     uint8_t joystickInputReport[5];     // joystick input report to be sent to PC
     bool bleIsConnected{false};         // flag of active BLE connection
 };

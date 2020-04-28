@@ -4,7 +4,9 @@ Yoke::Yoke(events::EventQueue& eventQueue, BLE& bleInterface) :
     eventQueue(eventQueue),
     bleInterface(bleInterface),
     led(LED1),
-    joystickHID(eventQueue, bleInterface, joystickReportMap, sizeof(joystickReportMap), joystickInputReport, sizeof(joystickInputReport))
+    joystickHID(eventQueue, bleInterface, joystickReportMap, sizeof(joystickReportMap), joystickInputReport, sizeof(joystickInputReport)),
+    deviceInformationService(bleInterface, "Marcin", "NYBLE", "00001", "1.0", "1.0", "1.0"),
+    batteryService(bleInterface)
 {
     printf("Yoke object created\r\n");
 }
