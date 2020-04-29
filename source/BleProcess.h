@@ -74,6 +74,11 @@ public:
      * Close existing connections and stop the process.
      */
     void stop(void);
+
+    void onSecuritySetupInitiated(Gap::Handle_t, bool allowBonding, bool requireMITM, SecurityManager::SecurityIOCapabilities_t iocaps)
+    {
+        printf("Security setup initiated\r\n");
+    }
  
 private:
  

@@ -38,6 +38,8 @@ bool BleProcess::start(void)
         return false;
     }
 
+    bleInterface.securityManager().init();
+
     return true;
 }
 
