@@ -63,7 +63,16 @@ void Yoke::handler(void)
 
     if(bleIsConnected)
     {
+        // XXX test of joystick
+        static uint32_t phase = 0;
+        int16_t axisValue = 30000 * sin(phase / 10.0);
+        joystickInputReport[0] = joystickInputReport[6] = axisValue & 0xFF;
+        joystickInputReport[1] = joystickInputReport[7] = (axisValue >> 8) & 0xFF;
+        joystickInputReport[12] = phase % 9;
+        joystickInputReport[13] = joystickInputReport [14] = (1 << (phase % 16));
+        phase++;
+
         joystickHID.sendReport();
-        batteryService.updateBatteryLevel(rand() % 100);
+        batteryService.updateBatteryLevel(80 + rand() % 5);
     }
 }
