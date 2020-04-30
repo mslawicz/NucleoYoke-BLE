@@ -66,17 +66,28 @@ void Yoke::handler(void)
         // XXX test of joystick
         static uint32_t phase = 0;
         int16_t axisValue = 30000 * sin(phase / 10.0);
-        joystickInputReport[0] = joystickInputReport[2] = joystickInputReport[4] = joystickInputReport[6] = joystickInputReport[8] = joystickInputReport[10] = axisValue & 0xFF;
-        joystickInputReport[1] = joystickInputReport[3] = joystickInputReport[5] = joystickInputReport[7] = joystickInputReport[9] = joystickInputReport[11] = (axisValue >> 8) & 0xFF;
-        // int16_t axisValue2 = 0x3FFF + 0x3FFF * sin(phase / 20.0);
-        // joystickInputReport[12] = axisValue2 & 0xFF;
-        // joystickInputReport[13] = (axisValue2 >> 8) & 0xFF;
-        joystickInputReport[12] = phase % 9;
-        joystickInputReport[13] = joystickInputReport [14] = (1 << (phase % 8));
+        uint8_t index = 0;
+        joystickInputReport[index++] = axisValue & 0xFF;
+        joystickInputReport[index++] = (axisValue >> 8) & 0xFF;
+        joystickInputReport[index++] = axisValue & 0xFF;
+        joystickInputReport[index++] = (axisValue >> 8) & 0xFF;
+        joystickInputReport[index++] = axisValue & 0xFF;
+        joystickInputReport[index++] = (axisValue >> 8) & 0xFF;
+        int8_t axisValue8 = 127 * sin(phase / 10.0);
+        joystickInputReport[index++] = axisValue8;
+        joystickInputReport[index++] = axisValue8;
+        joystickInputReport[index++] = axisValue8;
+        joystickInputReport[index++] = axisValue8;
+        joystickInputReport[index++] = axisValue8;
+        joystickInputReport[index++] = axisValue8;
+
+        joystickInputReport[index++] = phase % 9;
+        joystickInputReport[index++] = (1 << (phase % 8));
+        joystickInputReport[index++] = (1 << (phase % 8));
         phase++;
 
         joystickHID.sendReport();
-        if(phase % 20 == 0)
+        if(phase % 15 == 0)
         {
             batteryService.updateBatteryLevel(60 + rand() % 30);
         }

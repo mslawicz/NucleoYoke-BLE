@@ -11,24 +11,34 @@
 ReportMap joystickReportMap =
 {
     USAGE_PAGE(1),      0x01,         // Generic Desktop
-    USAGE(1),           0x04,         // Joystick
+    USAGE(1),           0x04,         // joystick
     COLLECTION(1),      0x01,         // Application
+        USAGE_PAGE(1),      0x01,         // Generic Desktop
+        USAGE(1),           0x01,         // pointer
+        LOGICAL_MINIMUM(2), 0x01, 0x80,   //   -32767
+        LOGICAL_MAXIMUM(2), 0xFF, 0x7f,   //   32767
+        REPORT_SIZE(1),     0x10,         //   16 bits per axis
         COLLECTION(1),      0x00,         //  Physical
-            LOGICAL_MINIMUM(2), 0x01, 0x80,   //   -32767
-            LOGICAL_MAXIMUM(2), 0xFF, 0x7f,   //   32767
             USAGE(1),           0x30,         //   X
             USAGE(1),           0x31,         //   Y
-            USAGE(1),           0x32,         //   Z
-            USAGE(1),           0x33,         //   Rx
-            USAGE(1),           0x34,         //   Ry
-            USAGE(1),           0x35,         //   Rz
-            // USAGE(1),           0x36,         //   slider
-            // USAGE(1),           0x37,         //   dial
-            // USAGE(1),           0x38,         //   wheel
-            REPORT_SIZE(1),     0x10,         //   16 bits per axis
-            REPORT_COUNT(1),    0x06,         //   9 axes
+            REPORT_COUNT(1),    0x02,         //   2 axes
             INPUT(1),           0x02,         //   Data, Variable, Absolute
         END_COLLECTION(0),
+        USAGE(1),           0x32,         //   Z
+        REPORT_COUNT(1),    0x01,         //   1 axis
+        INPUT(1),           0x02,         //   Data, Variable, Absolute
+
+        LOGICAL_MINIMUM(1), 0x80,         //   -128
+        LOGICAL_MAXIMUM(1), 0x7F,         //   127
+        REPORT_SIZE(1),     0x08,         //   8 bits per value
+        USAGE(1),           0x33,         //   Rx
+        USAGE(1),           0x34,         //   Ry
+        USAGE(1),           0x35,         //   Rz
+        USAGE(1),           0x36,         //   slider
+        USAGE(1),           0x37,         //   dial
+        USAGE(1),           0x38,         //   wheel
+        REPORT_COUNT(1),    0x06,         //   6 variables
+        INPUT(1),           0x02,         //   Data, Variable, Absolute
 
         USAGE(1),           0x39,       // hat switch
         LOGICAL_MINIMUM(1), 0x01,       // logical minimum 1
