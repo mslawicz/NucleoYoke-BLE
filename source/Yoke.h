@@ -21,12 +21,10 @@ ReportMap joystickReportMap =
         COLLECTION(1),      0x00,         //  Physical
             USAGE(1),           0x30,         //   X
             USAGE(1),           0x31,         //   Y
-            REPORT_COUNT(1),    0x02,         //   2 axes
+            USAGE(1),           0x32,         //   Z
+            REPORT_COUNT(1),    0x03,         //   3 axes
             INPUT(1),           0x02,         //   Data, Variable, Absolute
         END_COLLECTION(0),
-        USAGE(1),           0x32,         //   Z
-        REPORT_COUNT(1),    0x01,         //   1 axis
-        INPUT(1),           0x02,         //   Data, Variable, Absolute
 
         LOGICAL_MINIMUM(1), 0x80,         //   -128
         LOGICAL_MAXIMUM(1), 0x7F,         //   127
