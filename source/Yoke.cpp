@@ -50,7 +50,7 @@ void Yoke::start(void)
     }
 
     // XXX eventually this handler should be called on IMU interrupts
-    eventQueue.call_every(250, callback(this, &Yoke::handler));
+    eventQueue.call_every(200, callback(this, &Yoke::handler));
 }
 
 
@@ -66,13 +66,19 @@ void Yoke::handler(void)
         // XXX test of joystick
         static uint32_t phase = 0;
         int16_t axisValue = 30000 * sin(phase / 10.0);
-        joystickInputReport[0] = joystickInputReport[6] = axisValue & 0xFF;
-        joystickInputReport[1] = joystickInputReport[7] = (axisValue >> 8) & 0xFF;
+        joystickInputReport[0] = joystickInputReport[2] = joystickInputReport[4] = joystickInputReport[6] = joystickInputReport[8] = joystickInputReport[10] = axisValue & 0xFF;
+        joystickInputReport[1] = joystickInputReport[3] = joystickInputReport[5] = joystickInputReport[7] = joystickInputReport[9] = joystickInputReport[11] = (axisValue >> 8) & 0xFF;
+        // int16_t axisValue2 = 0x3FFF + 0x3FFF * sin(phase / 20.0);
+        // joystickInputReport[12] = axisValue2 & 0xFF;
+        // joystickInputReport[13] = (axisValue2 >> 8) & 0xFF;
         joystickInputReport[12] = phase % 9;
-        joystickInputReport[13] = joystickInputReport [14] = (1 << (phase % 16));
+        joystickInputReport[13] = joystickInputReport [14] = (1 << (phase % 8));
         phase++;
 
         joystickHID.sendReport();
-        batteryService.updateBatteryLevel(80 + rand() % 5);
+        if(phase % 20 == 0)
+        {
+            batteryService.updateBatteryLevel(60 + rand() % 30);
+        }
     }
 }

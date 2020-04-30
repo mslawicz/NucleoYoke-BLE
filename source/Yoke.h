@@ -22,8 +22,11 @@ ReportMap joystickReportMap =
             USAGE(1),           0x33,         //   Rx
             USAGE(1),           0x34,         //   Ry
             USAGE(1),           0x35,         //   Rz
+            // USAGE(1),           0x36,         //   slider
+            // USAGE(1),           0x37,         //   dial
+            // USAGE(1),           0x38,         //   wheel
             REPORT_SIZE(1),     0x10,         //   16 bits per axis
-            REPORT_COUNT(1),    0x06,         //   6 axes
+            REPORT_COUNT(1),    0x06,         //   9 axes
             INPUT(1),           0x02,         //   Data, Variable, Absolute
         END_COLLECTION(0),
 
