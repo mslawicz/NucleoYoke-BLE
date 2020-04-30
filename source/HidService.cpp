@@ -6,7 +6,6 @@ HidService::HidService(events::EventQueue& eventQueue, BLE& bleInterface, Report
     inputReport(inputReport),
     inputReportLength(inputReportLength),
     inputReportReferenceDescriptor(BLE_UUID_DESCRIPTOR_REPORT_REFERENCE, (uint8_t*)&inputReportReferenceData, 2, 2),
-    featureReportReferenceDescriptor(BLE_UUID_DESCRIPTOR_REPORT_REFERENCE, (uint8_t *)&featureReportReferenceData, 2, 2),
     hidInformationCharacteristic(GattCharacteristic::UUID_HID_INFORMATION_CHAR, &hidInformation),
     reportMapCharacteristic(GattCharacteristic::UUID_REPORT_MAP_CHAR,
             const_cast<uint8_t*>(reportMap), reportMapLength, reportMapLength,
@@ -19,11 +18,7 @@ HidService::HidService(events::EventQueue& eventQueue, BLE& bleInterface, Report
     inputReportCharacteristic(GattCharacteristic::UUID_REPORT_CHAR,
             inputReport, inputReportLength, inputReportLength,
             GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_READ | GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_NOTIFY | GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_WRITE,
-            inputReportDescriptors(), 1),
-    featureReportCharacteristic(GattCharacteristic::UUID_REPORT_CHAR,
-            &featureReport, 1, 1,
-            GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_READ | GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_WRITE,
-            featureReportDescriptors(), 1)
+            inputReportDescriptors(), 1)
 {
 
 }
@@ -41,8 +36,7 @@ void HidService::init(void)
         &reportMapCharacteristic,
         &protocolModeCharacteristic,
         &hidControlPointCharacteristic,
-        &inputReportCharacteristic,
-        &featureReportCharacteristic
+        &inputReportCharacteristic
     };
 
     auto numberOfCharacteristics = sizeof(characteristics) / sizeof(characteristics[0]);
@@ -75,15 +69,6 @@ GattAttribute** HidService::inputReportDescriptors()
     inputReportReferenceData.type = ReportType::INPUT_REPORT;
 
     static GattAttribute* descs[] = { &inputReportReferenceDescriptor };
-    return descs;
-}
-
-GattAttribute** HidService::featureReportDescriptors()
-{
-    featureReportReferenceData.ID = 0;
-    featureReportReferenceData.type = FEATURE_REPORT;
-
-    static GattAttribute* descs[] = { &featureReportReferenceDescriptor };
     return descs;
 }
 
