@@ -86,9 +86,11 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
 /*
 Called when connection attempt ends or an advertising device has been connected
 */
-void BleProcess::onConnectionComplete(const ble::ConnectionCompleteEvent &event)
+void BleProcess::onConnectionComplete(const ble::ConnectionCompleteEvent& event)
 {
     printf("Connected\r\n");
+    Gap& gap = bleInterface.gap();
+    gap.updateConnectionParameters(event.getConnectionHandle(), (ble::conn_interval_t)500, (ble::conn_interval_t)1000, 100, (ble::supervision_timeout_t)100);
     if(onConnectionChangeCb)
     {
         onConnectionChangeCb(true);
@@ -98,7 +100,7 @@ void BleProcess::onConnectionComplete(const ble::ConnectionCompleteEvent &event)
 /*
 Called when a connection has been disconnected
 */
-void BleProcess::onDisconnectionComplete(const ble::DisconnectionCompleteEvent &event)
+void BleProcess::onDisconnectionComplete(const ble::DisconnectionCompleteEvent& event)
 {
     printf("Disconnected\r\n");
     if(onConnectionChangeCb)

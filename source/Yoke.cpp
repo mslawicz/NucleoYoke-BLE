@@ -50,7 +50,7 @@ void Yoke::start(void)
     }
 
     // XXX eventually this handler should be called on IMU interrupts
-    eventQueue.call_every(200, callback(this, &Yoke::handler));
+    eventQueue.call_every(10, callback(this, &Yoke::handler));
 }
 
 
@@ -59,13 +59,14 @@ void Yoke::start(void)
 */
 void Yoke::handler(void)
 {
-    led = !led;
-
     if(bleIsConnected)
     {
         // XXX test of joystick
         static uint32_t phase = 0;
-        int16_t axisValue = 30000 * sin(phase / 10.0);
+
+        led = (phase & 0x40) != 0;
+
+        int16_t axisValue = 30000 * sin(phase / 100.0);
         uint8_t index = 0;
         joystickInputReport[index++] = axisValue & 0xFF;
         joystickInputReport[index++] = (axisValue >> 8) & 0xFF;
@@ -73,7 +74,7 @@ void Yoke::handler(void)
         joystickInputReport[index++] = (axisValue >> 8) & 0xFF;
         joystickInputReport[index++] = axisValue & 0xFF;
         joystickInputReport[index++] = (axisValue >> 8) & 0xFF;
-        int8_t axisValue8 = 127 * sin(phase / 10.0);
+        int8_t axisValue8 = 127 * sin(phase / 100.0);
         joystickInputReport[index++] = axisValue8;
         joystickInputReport[index++] = axisValue8;
         joystickInputReport[index++] = axisValue8;
@@ -81,9 +82,9 @@ void Yoke::handler(void)
         joystickInputReport[index++] = axisValue8;
         joystickInputReport[index++] = axisValue8;
 
-        joystickInputReport[index++] = phase % 9;
-        joystickInputReport[index++] = (1 << (phase % 8));
-        joystickInputReport[index++] = (1 << (phase % 8));
+        joystickInputReport[index++] = (phase / 50) % 9;
+        joystickInputReport[index++] = (1 << ((phase / 50) % 8));
+        joystickInputReport[index++] = (1 << ((phase / 50) % 8));
         phase++;
 
         joystickHID.sendReport();
