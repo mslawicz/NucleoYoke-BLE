@@ -96,9 +96,10 @@ void BleProcess::onConnectionComplete(const ble::ConnectionCompleteEvent& event)
 
     Gap::ConnectionParams_t params;
     gap.getPreferredConnectionParams(&params);
-    printf("con params: %d %d %d %d\r\n", params.minConnectionInterval, params.maxConnectionInterval, params.slaveLatency, params.connectionSupervisionTimeout);
+    printf("pref params: %d %d %d %d\r\n", params.minConnectionInterval, params.maxConnectionInterval, params.slaveLatency, params.connectionSupervisionTimeout);
 
-    //gap.updateConnectionParameters(event.getConnectionHandle(), (ble::conn_interval_t)500, (ble::conn_interval_t)1000, 100, (ble::supervision_timeout_t)100);
+    gap.updateConnectionParameters(event.getConnectionHandle(), (ble::conn_interval_t)8, (ble::conn_interval_t)8, 0, (ble::supervision_timeout_t)1000);
+
     if(onConnectionChangeCb)
     {
         onConnectionChangeCb(true);
