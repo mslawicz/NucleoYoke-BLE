@@ -73,7 +73,10 @@ void BleProcess::whenInitComplete(BLE::InitializationCompleteCallbackContext* ev
     {
         printf("BLE instance initialized\r\n");
         Gap& gap = bleInterface.gap();
+
         gap.setEventHandler(this);
+        const Gap::ConnectionParams_t connectionParams = {6, 10, 10, 1000};
+        gap.setPreferredConnectionParams(&connectionParams);
 
         if (postInitCb)
         {
@@ -90,7 +93,12 @@ void BleProcess::onConnectionComplete(const ble::ConnectionCompleteEvent& event)
 {
     printf("Connected\r\n");
     Gap& gap = bleInterface.gap();
-    gap.updateConnectionParameters(event.getConnectionHandle(), (ble::conn_interval_t)500, (ble::conn_interval_t)1000, 100, (ble::supervision_timeout_t)100);
+
+    Gap::ConnectionParams_t params;
+    gap.getPreferredConnectionParams(&params);
+    printf("con params: %d %d %d %d\r\n", params.minConnectionInterval, params.maxConnectionInterval, params.slaveLatency, params.connectionSupervisionTimeout);
+
+    //gap.updateConnectionParameters(event.getConnectionHandle(), (ble::conn_interval_t)500, (ble::conn_interval_t)1000, 100, (ble::supervision_timeout_t)100);
     if(onConnectionChangeCb)
     {
         onConnectionChangeCb(true);

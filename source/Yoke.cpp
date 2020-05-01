@@ -75,8 +75,8 @@ void Yoke::handler(void)
         joystickInputReport[index++] = axisValue & 0xFF;
         joystickInputReport[index++] = (axisValue >> 8) & 0xFF;
         int8_t axisValue8 = 127 * sin(phase / 100.0);
-        joystickInputReport[index++] = axisValue8;
-        joystickInputReport[index++] = axisValue8;
+        joystickInputReport[index++] = phase % 250 - 125;
+        joystickInputReport[index++] = 10 * (phase & 0x08);
         joystickInputReport[index++] = axisValue8;
         joystickInputReport[index++] = axisValue8;
         joystickInputReport[index++] = axisValue8;
